@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot name="puzzlebot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ============================================================
+       PROPERTIES — Puzzlebot escalado al 70% para caber en pasillos estrechos
+       Tamano efectivo: 12.6 x 10.5 cm (era 18 x 15 cm)
+       ============================================================ -->
+  <xacro:property name="mesh_scale"      value="0.7"/>
+
+  <xacro:property name="base_mass"       value="0.5"/>
+  <xacro:property name="wheel_mass"      value="0.05"/>
+  <xacro:property name="caster_mass"     value="0.02"/>
+  <xacro:property name="lidar_mass"      value="0.17"/>
+
+  <xacro:property name="base_length"     value="0.126"/>
+  <xacro:property name="base_width"      value="0.105"/>
+  <xacro:property name="base_height"     value="0.05"/>
+
+  <xacro:property name="wheel_radius"    value="0.035"/>
+  <xacro:property name="wheel_width"     value="0.018"/>
+  <xacro:property name="wheel_separation" value="0.133"/>
+
+  <xacro:property name="caster_radius"   value="0.014"/>
+
+  <xacro:property name="lidar_radius"    value="0.025"/>
+  <xacro:property name="lidar_height"    value="0.03"/>
+
+  <!-- ============================================================
+       INCLUDES — modulos del robot
+       ============================================================ -->
+  <xacro:include filename="$(find puzzlebot_description)/urdf/inertias.xacro"/>
+  <xacro:include filename="$(find puzzlebot_description)/urdf/base.xacro"/>
+  <xacro:include filename="$(find puzzlebot_description)/urdf/wheels.xacro"/>
+  <xacro:include filename="$(find puzzlebot_description)/urdf/sensors.xacro"/>
+  <xacro:include filename="$(find puzzlebot_description)/urdf/gazebo_plugins.xacro"/>
+
+</robot>

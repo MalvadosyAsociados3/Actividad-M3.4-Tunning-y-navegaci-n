@@ -1,0 +1,20 @@
+# gazebo_bridge.yaml
+#
+# INFORMATION FILE — Gazebo Classic uses gazebo_ros plugins which publish
+# ROS 2 topics directly (no separate bridge process needed).
+#
+# Topics published by the Gazebo plugins in puzzlebot.urdf.xacro:
+#
+#  Plugin: libgazebo_ros_diff_drive.so
+#   /odom      (nav_msgs/msg/Odometry)      — odometry from wheel encoders
+#   /tf        (tf2_msgs/msg/TFMessage)     — odom → base_footprint
+#
+#  Plugin: libgazebo_ros_ray_sensor.so
+#   /scan      (sensor_msgs/msg/LaserScan)  — 360° LiDAR scan
+#
+# Topics subscribed by the Gazebo plugins:
+#   /cmd_vel   (geometry_msgs/msg/Twist)    — velocity commands from Nav2 / teleop
+#
+# Additional topic published by robot_state_publisher:
+#   /tf        (tf2_msgs/msg/TFMessage)     — base_footprint → base_link → all child links
+#   /robot_description  (std_msgs/msg/String)
