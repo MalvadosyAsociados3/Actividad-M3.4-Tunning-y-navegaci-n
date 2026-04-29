@@ -38,24 +38,32 @@ slam_toolbox:
     # ── Scan matching ────────────────────────────────────────────────────────
     use_scan_matching: true
     use_scan_barycenter: true
-    minimum_travel_distance: 0.05        # m — small value for tight maze
-    minimum_travel_heading: 0.05         # rad — small value for tight turns
+    # Antes: 0.05 / 0.05 — procesaba scan cada 5 cm, demasiado frecuente en
+    # laberinto con pasillos parecidos (causaba matches falsos). Subido a 0.10
+    # para dar tiempo a que la odometria acumule senal distintiva.
+    minimum_travel_distance: 0.10
+    minimum_travel_heading: 0.10
 
-    scan_buffer_size: 10
+    scan_buffer_size: 20                 # mas historia para comparar
     scan_buffer_maximum_scan_distance: 10.0
-    link_match_minimum_response_fine: 0.1
+    link_match_minimum_response_fine: 0.15   # antes 0.1 — mas exigente
     link_scan_maximum_distance: 1.5
 
-    # ── Loop closure ────────────────────────────────────────────────────────
+    # ── Loop closure (endurecido para evitar teletransportes) ───────────────
+    # Los pasillos del laberinto se parecen entre si. Con thresholds bajos,
+    # SLAM confunde un pasillo con otro y hace "loop closure falso", snappeando
+    # el robot al otro pasillo -> teletransporte.
     do_loop_closing: true
     loop_search_maximum_distance: 3.0
-    loop_match_minimum_chain_size: 10
+    loop_match_minimum_chain_size: 15         # antes 10 - necesita mas evidencia
     loop_match_maximum_variance_coarse: 3.0
-    loop_match_minimum_response_coarse: 0.35
-    loop_match_minimum_response_fine: 0.45
+    loop_match_minimum_response_coarse: 0.55  # antes 0.35 - mas estricto
+    loop_match_minimum_response_fine: 0.65    # antes 0.45 - mas estricto
 
     # ── Correlation search ───────────────────────────────────────────────────
-    correlation_search_space_dimension: 0.5
+    # correlation_search_space_dimension reducido de 0.5 a 0.3 para limitar
+    # cuanto puede "saltar" SLAM al buscar el mejor match en cada scan.
+    correlation_search_space_dimension: 0.3
     correlation_search_space_resolution: 0.01
     correlation_search_space_smear_deviation: 0.1
 
@@ -63,9 +71,9 @@ slam_toolbox:
     loop_search_space_resolution: 0.05
     loop_search_space_smear_deviation: 0.03
 
-    # ── Penalties ────────────────────────────────────────────────────────────
-    distance_variance_penalty: 0.5
-    angle_variance_penalty: 1.0
+    # ── Penalties (subidas para castigar saltos grandes) ────────────────────
+    distance_variance_penalty: 1.5       # antes 0.5 - penaliza mas saltos
+    angle_variance_penalty: 2.0          # antes 1.0 - idem con rotaciones
 
     fine_search_angle_offset: 0.00349
     coarse_search_angle_offset: 0.349

@@ -1,4 +1,4 @@
-image: map_maze.pgm
+image: newpuzmap.pgm
 mode: trinary
 resolution: 0.05
 origin: [-1.73, -1.64, 0]

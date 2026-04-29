@@ -138,7 +138,7 @@ def main():
                 'y que AMCL publica map->odom. '
                 'Como alternativa, pasa --ax --ay --ayaw manualmente.'
             )
-            navigator.lifecycleShutdown()
+            # no apagamos Nav2 para mantener activos map_server/AMCL
             rclpy.shutdown()
             sys.exit(1)
 
@@ -157,23 +157,33 @@ def main():
 
     # A -> B
     if not go_to(navigator, 'B', b_pose):
-        navigator.lifecycleShutdown()
+        # no apagamos Nav2 para mantener activos map_server/AMCL
         rclpy.shutdown()
         sys.exit(1)
 
     navigator.get_logger().info(f'Espera de {args.wait:.1f} s en B...')
     time.sleep(args.wait)
 
+    # Limpiar costmaps antes del regreso para que el planner pueda replanear.
+    # Sin esto, residuos del costmap local pueden hacer que el robot parezca
+    # estar "dentro de un obstaculo inflado" y el planner falle.
+    navigator.get_logger().info('Limpiando costmaps antes del regreso...')
+    try:
+        navigator.clearAllCostmaps()
+    except Exception as e:
+        navigator.get_logger().warn(f'No se pudieron limpiar costmaps: {e}')
+    time.sleep(1.0)
+
     # B -> A
     # Re-timestamp antes de enviar
     a_pose.header.stamp = navigator.get_clock().now().to_msg()
     if not go_to(navigator, 'A (regreso)', a_pose):
-        navigator.lifecycleShutdown()
+        # no apagamos Nav2 para mantener activos map_server/AMCL
         rclpy.shutdown()
         sys.exit(1)
 
     navigator.get_logger().info('Ciclo A -> B -> A completado.')
-    navigator.lifecycleShutdown()
+    # no apagamos Nav2 para mantener activos map_server/AMCL
     rclpy.shutdown()
 
 
