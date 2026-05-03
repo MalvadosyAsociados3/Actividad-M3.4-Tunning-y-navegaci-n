@@ -3,6 +3,10 @@
 ROS 2 Humble workspace for autonomous SLAM mapping and Nav2 navigation of the
 **Puzzlebot** (differential-drive, 360° LiDAR) inside a Gazebo Classic maze.
 
+
+## Github: https://github.com/MalvadosyAsociados3/Actividad-M3.4-Tunning-y-navegaci-n
+## Video: https://youtu.be/ufn6eaOMdyQ
+
 ---
 
 ## Integrantes
