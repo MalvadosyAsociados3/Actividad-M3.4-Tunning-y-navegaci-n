@@ -191,4 +191,3 @@ El proceso de tuning siguió tres principios:
 2. **Consistencia con la simulación:** se redujeron los coeficientes de ruido de AMCL (`alpha`) porque Gazebo entrega odometría casi perfecta, algo que no ocurre en hardware real.
 3. **Selección del controlador adecuado:** la migración de DWB a Regulated Pure Pursuit fue el cambio de mayor impacto. Para diff-drive en espacios estrechos, la rotación en sitio (`use_rotate_to_heading: true`) permite cerrar curvas de 90° sin colisionar.
 
-El script `go_and_return.py` cumple el requisito M3.4 de ir a B y regresar a A de forma autónoma, usando la API `BasicNavigator` para encapsular la lógica.
