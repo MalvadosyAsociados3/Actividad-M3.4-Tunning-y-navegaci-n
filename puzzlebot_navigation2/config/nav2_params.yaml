@@ -1,17 +1,16 @@
 # =============================================================================
 #  nav2_params.yaml  —  Puzzlebot Nav2 tuning (Actividad M3.4)
 # -----------------------------------------------------------------------------
-#  Robot real (escalado al 70%):
-#    - Footprint:     12.6 cm  x  10.5 cm
-#    - Diagonal:      16.4 cm   ->  radio de giro: ~8.2 cm
+#  Puzzlebot (dimensiones reales):
+#    - Largo:  20.0 cm   |   Ancho: 19.1 cm
+#    - Footprint rectangular: 20 cm x 19.1 cm
 #    - Altura chasis: 5 cm
-#    - Separacion de ruedas: 13.3 cm
 #    - Max vel lineal: 0.12 m/s   |   Max vel angular: 0.8 rad/s
-#    - LiDAR 360 a z=8 cm, rango 0.08-5.0 m, 10 Hz
+#    - LiDAR: RPLiDAR A1 (2D, 360 grados), rango 0.08-5.0 m, 10 Hz
 #
 #  Mapa:
 #    - resolucion: 0.05 m/px
-#    - entorno: laberinto interior con pasillos de ~30 cm
+#    - entorno: laberinto interior con pasillos de ~60 cm
 #
 #  Cada bloque tiene comentarios explicando el motivo del valor elegido.
 # =============================================================================
@@ -60,9 +59,8 @@ amcl:
     pf_z: 0.99
     resample_interval: 1
 
-    # Umbrales de actualizacion: el robot escalado (70%) se mueve menos por
-    # tick, asi que bajamos update_min_d de 0.25 a 0.15 para que AMCL
-    # actualice mas a menudo y no deje que la pose se desincronice.
+    # Umbrales de actualizacion: bajamos update_min_d de 0.25 a 0.15 para
+    # que AMCL actualice mas a menudo y no deje que la pose se desincronice.
     update_min_d: 0.15
     update_min_a: 0.15
 
@@ -186,8 +184,8 @@ controller_server:
 
     # --- Goal checker -----------------------------------------------------
     # Tolerancias reducidas respecto al valor por defecto (0.25) para que
-    # el robot pequeño (12.6 cm) se detenga mas cerca del objetivo.
-    # xy=0.15 m (~11 cm) | yaw=0.20 rad (~11 grados)
+    # el robot se detenga mas cerca del objetivo.
+    # xy=0.15 m | yaw=0.20 rad (~11 grados)
     general_goal_checker:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
@@ -198,14 +196,14 @@ controller_server:
     FollowPath:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
 
-      # Velocidades: ajustadas al robot real (70% tamaño original)
-      desired_linear_vel: 0.12           # m/s - seguro en pasillos estrechos
+      # Velocidades: seguras para pasillos de 60 cm con robot de ~20 cm
+      desired_linear_vel: 0.12           # m/s - conservador para navegacion estable
       max_angular_accel: 1.5             # rad/s^2
       rotate_to_heading_angular_vel: 0.6 # rad/s al girar en sitio
 
       # Lookahead: cuan lejos en el path mira el controller.
-      # Para robot chico conviene mirar menos adelante (no salirse del pasillo
-      # al anticipar curvas). Antes era 0.3/0.2/0.4, ahora 0.25/0.2/0.35.
+      # Con pasillos de 60 cm, un lookahead moderado evita que el robot
+      # corte curvas y choque con las paredes.
       lookahead_dist: 0.25
       min_lookahead_dist: 0.2
       max_lookahead_dist: 0.35
@@ -254,11 +252,12 @@ controller_server_rclcpp_node:
 #  SINTOMA: Nav2 se negaba a planear por algunos pasillos (todo quedaba morado
 #           en RViz)
 #  CAUSA:   inflation_radius muy alto (0.35 m) cubria todo el ancho del pasillo
-#  AJUSTE:  inflation_radius = 0.15 m y cost_scaling_factor = 5.0. El costo
-#           decae mas rapido al alejarse de la pared, dejando carril libre.
-#  SINTOMA: costmap local no alcanzaba a ver obstaculos antes de la curva.
-#  AJUSTE:  width/height = 3 m sigue siendo suficiente a 0.12 m/s, pero
-#           subimos update_frequency de 5 a 10 Hz para reaccion mas rapida.
+#  AJUSTE:  inflation_radius = 0.12 m con cost_scaling_factor = 5.0. Con
+#           pasillos de 60 cm y robot de ~20 cm, queda ~20 cm libres por lado,
+#           suficiente margen para que el planner encuentre rutas validas.
+#  AJUSTE:  update_frequency subida de 5 a 10 Hz para reaccion mas rapida.
+#  NOTA:    Se usa obstacle_layer (2D) en vez de voxel_layer porque el
+#           RPLiDAR A1 es un sensor 2D.
 # ============================================================================
 local_costmap:
   local_costmap:
@@ -373,8 +372,8 @@ map_saver:
 #  PLANNER SERVER  —  planner global A*
 # ----------------------------------------------------------------------------
 #  AJUSTE: tolerancia bajada de 0.5 a 0.25 para que el planner se esfuerce
-#          en llegar mas cerca del goal (el laberinto tiene celdas de ~30 cm;
-#          0.5 m era "el pasillo de al lado").
+#          en llegar mas cerca del goal. Con pasillos de 60 cm, 0.5 m de
+#          tolerancia podia resolver al pasillo equivocado.
 # ============================================================================
 planner_server:
   ros__parameters:
