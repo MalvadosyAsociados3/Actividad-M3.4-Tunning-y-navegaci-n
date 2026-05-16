@@ -111,7 +111,7 @@ bt_navigator:
   ros__parameters:
     use_sim_time: True
     global_frame: map
-    robot_base_frame: base_link
+    robot_base_frame: base_footprint
     odom_topic: /odom
     default_bt_xml_filename: navigate_w_replanning_and_recovery.xml
     plugin_lib_names:
@@ -267,7 +267,7 @@ local_costmap:
       update_frequency: 10.0       # antes 5.0 - mas reactivo ante obstaculos
       publish_frequency: 5.0       # antes 2.0 - RViz se actualiza mas rapido
       global_frame: odom
-      robot_base_frame: base_link
+      robot_base_frame: base_footprint
       rolling_window: true
       width: 3
       height: 3
@@ -313,7 +313,7 @@ global_costmap:
       update_frequency: 1.0        # estatico, no necesita frecuencia alta
       publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: base_link
+      robot_base_frame: base_footprint
       footprint: "[[0.1, 0.096], [0.1, -0.096], [-0.1, -0.096], [-0.1, 0.096]]"  # Puzzlebot real: 20 cm largo x 19.1 cm ancho
       resolution: 0.05
       track_unknown_space: true
@@ -412,7 +412,7 @@ recoveries_server:
     wait:
       plugin: "nav2_recoveries/Wait"
     global_frame: odom
-    robot_base_frame: base_link
+    robot_base_frame: base_footprint
     transform_timeout: 0.1
     simulate_ahead_time: 2.0
     max_rotational_vel: 0.8       # antes 1.0 - consistente con RPP
