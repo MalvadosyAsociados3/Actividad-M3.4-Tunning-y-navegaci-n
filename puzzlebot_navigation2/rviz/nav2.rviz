@@ -13,15 +13,14 @@ Panels:
         - /Global Planner1
         - /Controller1
       Splitter Ratio: 0.5
-    Tree Height: 850
+    Tree Height: 207
   - Class: rviz_common/Selection
     Name: Selection
   - Class: rviz_common/Tool Properties
     Expanded:
-      - /2D Nav Goal1
       - /Publish Point1
     Name: Tool Properties
-    Splitter Ratio: 0.588679
+    Splitter Ratio: 0.5886790156364441
   - Class: rviz_common/Views
     Expanded:
       - /Current View1
@@ -30,7 +29,6 @@ Panels:
 Visualization Manager:
   Class: ""
   Displays:
-    # ── Background grid ─────────────────────────────────────────────────────
     - Alpha: 0.5
       Cell Size: 1
       Class: rviz_default_plugins/Grid
@@ -49,10 +47,8 @@ Visualization Manager:
       Plane Cell Count: 10
       Reference Frame: <Fixed Frame>
       Value: true
-
-    # ── Static map ───────────────────────────────────────────────────────────
-    - Class: rviz_default_plugins/Map
-      Alpha: 0.7
+    - Alpha: 0.699999988079071
+      Class: rviz_default_plugins/Map
       Color Scheme: map
       Draw Behind: false
       Enabled: true
@@ -67,16 +63,12 @@ Visualization Manager:
       Update Topic:
         Depth: 5
         Durability Policy: Volatile
-        Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /map_updates
       Use Timestamp: false
       Value: true
-
-    # ── LiDAR scan ───────────────────────────────────────────────────────────
-    - Class: rviz_default_plugins/LaserScan
-      Alpha: 1
+    - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
         Max Value: 10
@@ -84,6 +76,7 @@ Visualization Manager:
         Value: true
       Axis: Z
       Channel Name: intensity
+      Class: rviz_default_plugins/LaserScan
       Color: 255; 0; 0
       Color Transformer: FlatColor
       Decay Time: 0
@@ -95,7 +88,6 @@ Visualization Manager:
       Min Intensity: 0
       Name: LaserScan
       Position Transformer: XYZ
-      Queue Size: 10
       Selectable: true
       Size (Pixels): 3
       Size (m): 0.009999999776482582
@@ -110,12 +102,17 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
-
-    # ── Robot model ──────────────────────────────────────────────────────────
-    - Class: rviz_default_plugins/RobotModel
+    - Alpha: 1
+      Class: rviz_default_plugins/RobotModel
+      Collision Enabled: false
       Description File: ""
       Description Source: Topic
-      Description Topic: /robot_description
+      Description Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_description
       Enabled: true
       Links:
         All Links Enabled: true
@@ -123,33 +120,139 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
+        base_footprint:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        bracket_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_link_optical:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        caster_holder_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        jetson_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        laser_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        lidar_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        tof_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wheel_caster_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wheel_left_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        wheel_right_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Mass Properties:
+        Inertia: false
+        Mass: false
       Name: RobotModel
       TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true
-
-    # ── TF tree ──────────────────────────────────────────────────────────────
     - Class: rviz_default_plugins/TF
       Enabled: true
       Frame Timeout: 15
       Frames:
         All Enabled: true
-      Marker Scale: 0.3
+        base_footprint:
+          Value: true
+        base_link:
+          Value: true
+        bracket_base_link:
+          Value: true
+        camera_link:
+          Value: true
+        camera_link_optical:
+          Value: true
+        caster_holder_link:
+          Value: true
+        caster_link:
+          Value: true
+        jetson_link:
+          Value: true
+        laser_frame:
+          Value: true
+        lidar_base_link:
+          Value: true
+        lidar_link:
+          Value: true
+        map:
+          Value: true
+        odom:
+          Value: true
+        tof_link:
+          Value: true
+        wheel_caster_link:
+          Value: true
+        wheel_l_link:
+          Value: true
+        wheel_left_link:
+          Value: true
+        wheel_r_link:
+          Value: true
+        wheel_right_link:
+          Value: true
+        world:
+          Value: true
+      Marker Scale: 0.30000001192092896
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        {}
+        map:
+          odom:
+            {}
       Update Interval: 0
       Value: true
-
-    # ── AMCL particle swarm ──────────────────────────────────────────────────
-    - Class: rviz_default_plugins/PoseArray
-      Arrow Length: 0.15
-      Axes Length: 0.3
+    - Alpha: 1
+      Arrow Length: 0.15000000596046448
+      Axes Length: 0.30000001192092896
       Axes Radius: 0.009999999776482582
+      Class: rviz_default_plugins/PoseArray
       Color: 255; 25; 0
       Enabled: true
       Head Length: 0.07000000029802322
@@ -166,12 +269,9 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /particle_cloud
       Value: true
-
-    # ── Global Planner folder ────────────────────────────────────────────────
     - Class: rviz_common/Group
       Displays:
-        # Global costmap
-        - Alpha: 0.3
+        - Alpha: 0.30000001192092896
           Class: rviz_default_plugins/Map
           Color Scheme: costmap
           Draw Behind: false
@@ -187,13 +287,11 @@ Visualization Manager:
           Update Topic:
             Depth: 5
             Durability Policy: Volatile
-            Filter size: 10
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /global_costmap/costmap_updates
           Use Timestamp: false
           Value: true
-        # Global path
         - Alpha: 1
           Buffer Length: 1
           Class: rviz_default_plugins/Path
@@ -222,8 +320,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /plan
           Value: true
-        # Goal polygon
-        - Alpha: 0.29999999701976776
+        - Alpha: 0.30000001192092896
           Class: rviz_default_plugins/Polygon
           Color: 25; 255; 0
           Enabled: true
@@ -238,12 +335,9 @@ Visualization Manager:
           Value: true
       Enabled: true
       Name: Global Planner
-
-    # ── Controller folder ─────────────────────────────────────────────────────
     - Class: rviz_common/Group
       Displays:
-        # Local costmap
-        - Alpha: 0.45
+        - Alpha: 0.44999998807907104
           Class: rviz_default_plugins/Map
           Color Scheme: costmap
           Draw Behind: false
@@ -259,13 +353,11 @@ Visualization Manager:
           Update Topic:
             Depth: 5
             Durability Policy: Volatile
-            Filter size: 10
             History Policy: Keep Last
             Reliability Policy: Reliable
             Value: /local_costmap/costmap_updates
           Use Timestamp: false
           Value: true
-        # Local plan (DWB)
         - Alpha: 1
           Buffer Length: 1
           Class: rviz_default_plugins/Path
@@ -296,7 +388,6 @@ Visualization Manager:
           Value: true
       Enabled: true
       Name: Controller
-
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -312,10 +403,12 @@ Visualization Manager:
     - Class: rviz_default_plugins/Measure
       Line color: 128; 128; 0
     - Class: rviz_default_plugins/SetInitialPose
+      Covariance x: 0.25
+      Covariance y: 0.25
+      Covariance yaw: 0.06853891909122467
       Topic:
         Depth: 5
         Durability Policy: Volatile
-        Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /initialpose
@@ -323,7 +416,6 @@ Visualization Manager:
       Topic:
         Depth: 5
         Durability Policy: Volatile
-        Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /goal_pose
@@ -332,7 +424,6 @@ Visualization Manager:
       Topic:
         Depth: 5
         Durability Policy: Volatile
-        Filter size: 10
         History Policy: Keep Last
         Reliability Policy: Reliable
         Value: /clicked_point
@@ -343,7 +434,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 6
+      Distance: 4.505771160125732
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -366,16 +457,16 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 900
+  Height: 1016
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001560000031600000000fb0000000c00440069007300700073010000003d0000031600000088ffffffff000000010000015500000316fc02000000000000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000001cb0000039efc0200000004fb000000100044006900730070006c006100790073010000003d0000015a000000c900fffffffb0000001200530065006c0065006300740069006f006e010000019d000000a90000005c00fffffffb0000001e0054006f006f006c002000500072006f0070006500720074006900650073010000024c000000a80000005c00fffffffb0000000a0056006900650077007301000002fa000000e1000000a400ffffff0000056f0000039e00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Tool Properties:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1400
-  X: 0
-  Y: 0
+  Width: 1856
+  X: 64
+  Y: 27

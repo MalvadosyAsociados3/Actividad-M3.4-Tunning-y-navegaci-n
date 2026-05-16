@@ -10,13 +10,18 @@ Uso:
 import argparse
 import math
 import rclpy
+import rclpy.parameter
 from rclpy.node import Node
 from geometry_msgs.msg import PoseWithCovarianceStamped
 
 
 class InitialPosePublisher(Node):
     def __init__(self, x: float, y: float, yaw: float):
-        super().__init__('set_initial_pose')
+        super().__init__('set_initial_pose',
+                         parameter_overrides=[
+                             rclpy.parameter.Parameter('use_sim_time',
+                                                      rclpy.parameter.Parameter.Type.BOOL, True)
+                         ])
         self.publisher = self.create_publisher(
             PoseWithCovarianceStamped, 'initialpose', 10
         )

@@ -39,6 +39,11 @@ def main():
     rclpy.init()
     navigator = BasicNavigator()
 
+    from rclpy.parameter import Parameter
+    navigator.set_parameters([
+        Parameter('use_sim_time', Parameter.Type.BOOL, True),
+    ])
+
     navigator.waitUntilNav2Active()
 
     goal_pose = create_goal_pose(navigator, args.x, args.y, args.yaw)
@@ -61,7 +66,6 @@ def main():
     elif result == TaskResult.FAILED:
         navigator.get_logger().error('No se pudo alcanzar el goal')
 
-    navigator.lifecycleShutdown()
     rclpy.shutdown()
 
 
