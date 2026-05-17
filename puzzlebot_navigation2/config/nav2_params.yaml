@@ -189,8 +189,8 @@ controller_server:
     general_goal_checker:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.15
-      yaw_goal_tolerance: 0.20
+      xy_goal_tolerance: 0.20
+      yaw_goal_tolerance: 3.14
 
     # --- Regulated Pure Pursuit -------------------------------------------
     FollowPath:
@@ -212,8 +212,8 @@ controller_server:
 
       # Aproximacion al goal: frena gradualmente los ultimos 0.5 m antes
       # del objetivo para no pasarse de largo.
-      min_approach_linear_velocity: 0.05
-      approach_velocity_scaling_dist: 0.5
+      min_approach_linear_velocity: 0.03
+      approach_velocity_scaling_dist: 0.3
 
       # Deteccion de colision: mira el carrot (lookahead) y para si detecta
       # colision antes de que se cumpla el tiempo.
@@ -232,12 +232,14 @@ controller_server:
       use_fixed_curvature_lookahead: false
       curvature_lookahead_dist: 0.25
 
-      # Rotate to heading: desactivado para que RPP trace arcos continuos.
-      # En laberintos con curvas de 90 deg, stop-rotate-go causa oscilacion.
-      use_rotate_to_heading: false
-      rotate_to_heading_min_angle: 0.785   # ~45 deg (backup si se reactiva)
+      # Rotate to heading: activado para que el robot gire sobre su eje en
+      # cambios de direccion grandes (U-turns, fondo de pasillos). Con min_angle
+      # de 1.0 rad (~57 deg), solo gira en sitio en cambios drasticos, NO en
+      # curvas suaves del laberinto. Necesario para diff-drive en pasillos estrechos.
+      use_rotate_to_heading: true
+      rotate_to_heading_min_angle: 1.0
 
-      allow_reversing: false
+      allow_reversing: true
       max_robot_pose_search_dist: 10.0
       transform_tolerance: 0.3
 

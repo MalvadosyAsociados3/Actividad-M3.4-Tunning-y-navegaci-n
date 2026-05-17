@@ -31,7 +31,7 @@ def generate_launch_description():
     x_pos        = LaunchConfiguration('x_pos',  default='1.35')
     y_pos        = LaunchConfiguration('y_pos',  default='0.0')
     z_pos        = LaunchConfiguration('z_pos',  default='0.05')
-    yaw          = LaunchConfiguration('yaw',    default='0.0')
+    yaw          = LaunchConfiguration('yaw',    default='-1.5708')
 
     return LaunchDescription([
 
@@ -40,7 +40,7 @@ def generate_launch_description():
         DeclareLaunchArgument('x_pos',  default_value='1.35',  description='Spawn X'),
         DeclareLaunchArgument('y_pos',  default_value='0.0',  description='Spawn Y'),
         DeclareLaunchArgument('z_pos',  default_value='0.05', description='Spawn Z'),
-        DeclareLaunchArgument('yaw',    default_value='0.0',  description='Spawn yaw'),
+        DeclareLaunchArgument('yaw',    default_value='-1.5708',  description='Spawn yaw (facing -Y into maze)'),
 
         # ── Gazebo Classic ────────────────────────────────────────────────
         IncludeLaunchDescription(
