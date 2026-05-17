@@ -81,6 +81,9 @@ def main():
     parser.add_argument('--ax', type=float, default=None, help='A: x (default = pose actual)')
     parser.add_argument('--ay', type=float, default=None, help='A: y (default = pose actual)')
     parser.add_argument('--ayaw', type=float, default=None, help='A: yaw (default = pose actual)')
+    parser.add_argument('--ix', type=float, default=None, help='Initial pose x (publica antes de navegar)')
+    parser.add_argument('--iy', type=float, default=None, help='Initial pose y')
+    parser.add_argument('--iyaw', type=float, default=None, help='Initial pose yaw')
     parser.add_argument('--wait', type=float, default=3.0, help='Segundos de espera en B')
     args = parser.parse_args()
 
@@ -94,6 +97,23 @@ def main():
     navigator.set_parameters([
         Parameter('use_sim_time', Parameter.Type.BOOL, True),
     ])
+
+    # Publicar initial pose si se especifica (evita depender de script externo)
+    if args.ix is not None and args.iy is not None:
+        initial_pose = PoseStamped()
+        initial_pose.header.frame_id = 'map'
+        initial_pose.header.stamp = navigator.get_clock().now().to_msg()
+        initial_pose.pose.position.x = args.ix
+        initial_pose.pose.position.y = args.iy or 0.0
+        iyaw = args.iyaw or 0.0
+        initial_pose.pose.orientation.z = math.sin(iyaw / 2.0)
+        initial_pose.pose.orientation.w = math.cos(iyaw / 2.0)
+        navigator.setInitialPose(initial_pose)
+        navigator.get_logger().info(
+            f'Initial pose enviada: x={args.ix:.2f}, y={args.iy:.2f}, yaw={iyaw:.2f}'
+        )
+        # Dar tiempo a AMCL para converger con la pose inicial
+        time.sleep(5.0)
 
     navigator.waitUntilNav2Active()
 
@@ -164,15 +184,20 @@ def main():
     navigator.get_logger().info(f'Espera de {args.wait:.1f} s en B...')
     time.sleep(args.wait)
 
-    # Limpiar costmaps antes del regreso para que el planner pueda replanear.
-    # Sin esto, residuos del costmap local pueden hacer que el robot parezca
-    # estar "dentro de un obstaculo inflado" y el planner falle.
+    # Limpiar costmaps antes del regreso: el local_costmap acumula inflacion
+    # del recorrido A->B y puede bloquear la planificacion del camino inverso.
     navigator.get_logger().info('Limpiando costmaps antes del regreso...')
     try:
-        navigator.clearAllCostmaps()
+        navigator.clearLocalCostmap()
+        navigator.clearGlobalCostmap()
     except Exception as e:
-        navigator.get_logger().warn(f'No se pudieron limpiar costmaps: {e}')
-    time.sleep(1.0)
+        navigator.get_logger().warn(f'clearCostmaps fallo: {e}, intentando clearAll...')
+        try:
+            navigator.clearAllCostmaps()
+        except Exception:
+            pass
+    # Dar tiempo al costmap para regenerarse con datos frescos del LiDAR
+    time.sleep(3.0)
 
     # B -> A
     # Re-timestamp antes de enviar

@@ -34,10 +34,35 @@ def main():
     parser.add_argument('-x', type=float, default=1.0, help='Posicion x del goal (m)')
     parser.add_argument('-y', type=float, default=0.0, help='Posicion y del goal (m)')
     parser.add_argument('-Y', '--yaw', type=float, default=0.0, help='Orientacion yaw del goal (rad)')
+    parser.add_argument('--ix', type=float, default=None, help='Initial pose x (publica antes de navegar)')
+    parser.add_argument('--iy', type=float, default=None, help='Initial pose y')
+    parser.add_argument('--iyaw', type=float, default=None, help='Initial pose yaw')
     args = parser.parse_args()
 
     rclpy.init()
     navigator = BasicNavigator()
+
+    from rclpy.parameter import Parameter
+    import time as _time
+    navigator.set_parameters([
+        Parameter('use_sim_time', Parameter.Type.BOOL, True),
+    ])
+
+    # Publicar initial pose si se especifica
+    if args.ix is not None and args.iy is not None:
+        initial_pose = PoseStamped()
+        initial_pose.header.frame_id = 'map'
+        initial_pose.header.stamp = navigator.get_clock().now().to_msg()
+        initial_pose.pose.position.x = args.ix
+        initial_pose.pose.position.y = args.iy
+        iyaw = args.iyaw or 0.0
+        initial_pose.pose.orientation.z = math.sin(iyaw / 2.0)
+        initial_pose.pose.orientation.w = math.cos(iyaw / 2.0)
+        navigator.setInitialPose(initial_pose)
+        navigator.get_logger().info(
+            f'Initial pose enviada: x={args.ix:.2f}, y={args.iy:.2f}, yaw={iyaw:.2f}'
+        )
+        _time.sleep(5.0)
 
     navigator.waitUntilNav2Active()
 
@@ -61,7 +86,6 @@ def main():
     elif result == TaskResult.FAILED:
         navigator.get_logger().error('No se pudo alcanzar el goal')
 
-    navigator.lifecycleShutdown()
     rclpy.shutdown()
 
 
