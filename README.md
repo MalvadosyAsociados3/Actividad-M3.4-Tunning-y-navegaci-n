@@ -11,7 +11,7 @@ ROS 2 Humble workspace for autonomous SLAM mapping and Nav2 navigation of the
 
 ## Integrantes
 
-- Luis Adrián Uribe Cruz (LaucoTec) - creación e integración de mapas
+- Luis Adrián Uribe Cruz (LaucoTec) - creación e integración de mapas (compu descompuesta)
 - Grant Nathaniel Keegan (gnkeegan)
 - Diego Gerardo Sánchez Moreno (DiegoSanMo6011)
 - Héctor Gúmaro Guzmán Reyes (HectorGuzm4n)
